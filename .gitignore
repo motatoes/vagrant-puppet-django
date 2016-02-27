@@ -1,0 +1,6 @@
+# Ignore the Vagrant folder
+.vagrant/
+
+# Ignore the repository folder
+coupmonitor_main
+
