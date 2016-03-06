@@ -4,3 +4,14 @@
 # Ignore the repository folder
 coupmonitor_main
 
+# == ignoring some vim-related files == #
+# swap
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+# session
+Session.vim
+# temporary
+.netrwhist
+*~
+# auto-generated tag files
+tags
