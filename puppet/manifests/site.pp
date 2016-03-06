@@ -1,4 +1,4 @@
-# Ensures that the user coupmonitor exists
+# == Ensures that the user coupmonitor exists == #
 
 package { ['libpq-dev','postgresql','postgresql-contrib']:
     ensure => latest,
@@ -6,7 +6,7 @@ package { ['libpq-dev','postgresql','postgresql-contrib']:
 }
 
 
-# add coupmonitor to the sudoers
+# == add coupmonitor to the sudoers == #
 
 class { 'sudo': }
 
@@ -19,7 +19,8 @@ user { 'coupmonitor':
   groups    => ['admin'],
 }
  
-#vagrant user needs to be a sudoer
+# == vagrant user needs to be a sudoer == #
+
 sudo::conf {'vagrant':
   ensure => present,
   content => 'vagrant ALL=(ALL) NOPASSWD:ALL',
@@ -30,7 +31,8 @@ sudo::conf { 'admins':
   content => '%admin ALL=(ALL) ALL',
 }
 
-## Ensure that some directories exist
+# == Ensure that some directories exist == #
+
 # Ensures that the coupmonitor home directory exits
 file { '/home/coupmonitor':
   ensure => 'directory',
