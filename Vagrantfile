@@ -5,6 +5,9 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+
+PROJECT_NAME = "yourproject"
+
 Vagrant.configure(2) do |config|
 
   config.vm.box = "ubuntu/trusty64"
@@ -19,7 +22,7 @@ Vagrant.configure(2) do |config|
    config.vm.network "forwarded_port", guest: 8080, host: 8000
 
   # == synced folders == #
-   config.vm.synced_folder "coupmonitor_main", "/home/coupmonitor/coupmonitor_main", owner:"vagrant"
+   config.vm.synced_folder PROJECT_NAME, "/home/coupmonitor/coupmonitor_main", owner:"vagrant"
 
   # == Provisioning == # 
   config.vm.provision "shell" do |shell| 
@@ -32,7 +35,7 @@ Vagrant.configure(2) do |config|
         "username" => "youruser",
          # Use openssl -1 to generate this password hash
         "password" => "passhash", 
-        "projectname" => "cool_project"
+        "projectname" => PROJECT_NAME 
     }
     puppet.manifest_file = "site.pp"
  end
