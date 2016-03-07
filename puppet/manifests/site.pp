@@ -1,98 +1,89 @@
-# == Ensures that the user coupmonitor exists == #
+# == Ensures that the user $user exists == #
 
-package { ['libpq-dev','postgresql','postgresql-contrib']:
+package { ["libpq-dev","postgresql","postgresql-contrib"]:
     ensure => latest,
-    install_options => ['--allow-unauthenticated', '-f'],
+    install_options => ["--allow-unauthenticated", "-f"],
 }
 
 
-# == add coupmonitor to the sudoers == #
+# == add $user to the sudoers == #
 
-class { 'sudo': }
+class { "sudo": }
 
 
-user { 'coupmonitor':
+user { "${username}": 
   ensure    => present,
-  shell     => '/bin/bash',
-  home      => '/home/coupmonitor',
-  password  => '$1$bi5lnZpn$Q.g2suQsXsdej2bJMj1p50',
-  groups    => ['admin'],
+  shell     => "/bin/bash",
+  home      => "/home/${username}",
+  password  => "${password}",
+  groups    => ["admin"],
 }
  
 # == vagrant user needs to be a sudoer == #
 
-sudo::conf {'vagrant':
+sudo::conf {"vagrant":
   ensure => present,
-  content => 'vagrant ALL=(ALL) NOPASSWD:ALL',
+  content => "vagrant ALL=(ALL) NOPASSWD:ALL",
 }
 
-sudo::conf { 'admins':
+sudo::conf { "admins":
   ensure => present,
-  content => '%admin ALL=(ALL) ALL',
+  content => "%admin ALL=(ALL) ALL",
 }
 
 # == Ensure that some directories exist == #
 
-# Ensures that the coupmonitor home directory exits
-file { '/home/coupmonitor':
-  ensure => 'directory',
-  owner => 'coupmonitor'
+# Ensures that the $user home directory exits
+file { "/home/${username}":
+  ensure => "directory",
+  owner => "${username}"
 }
 
-file { '/home/coupmonitor/virtualenvs':
-  ensure => 'directory',
-  owner => 'coupmonitor'
+file { "/home/${username}/virtualenvs":
+  ensure => "directory",
+  owner => "${username}"
 }
 
-file { '/home/coupmonitor/coupmonitor_main':
-  ensure => 'directory',
-  owner => 'coupmonitor'
+file { "/home/${username}/${projectname}":
+  ensure => "directory",
+  owner => "${username}"
 }
 
-## Configuration for some scripts
-# ensures that apache is installed on the machine
-class { 'apache': }
+class { "postgresql::server": }
 
-apache::vhost { 'coupmonitor.com':
-    port     => '80',
-    docroot  => '/home/coupmonitor/CM_main' 
-}
-
-class { 'postgresql::server': }
-
-postgresql::server::db { 'coupmonitor_main':
-    user => 'coupmonitor',
-    password => 'coupmonitor'
+postgresql::server::db { "${projectname}":
+    user => "${username}",
+    password => "${username}"
 }
 
 
-class { 'python': 
-    version     => 'system',
+class { "python": 
+    version     => "system",
     pip         => true,
     dev         => true,
     virtualenv  => true,
 }
 
-python::virtualenv { '/home/coupmonitor/coupmonitor_main':
+python::virtualenv { "/home/${username}/virtualenvs/${projectname}":
      ensure     => present,
-     version    => 'system',
+     version    => "system",
      systempkgs => true,
      distribute => false,
-     venv_dir   => '/home/coupmonitor/virtualenvs/coupmonitor_main',
-     owner      => 'coupmonitor',
+     venv_dir   => "/home/${username}/virtualenvs/${projectname}",
+     owner      => "${username}",
 }
 
-python::pip { 'django':
-    pkgname => 'django',
-    ensure => '1.8',
-    virtualenv => '/home/coupmonitor/virtualenvs/coupmonitor_main'
+python::pip { "django":
+    pkgname => "django",
+    ensure => "1.8",
+    virtualenv => "/home/${username}/virtualenvs/${projectname}"
 }
 
 # install psycopg2 to use postgresql database with django
-python::pip { 'psycopg2':
-   pkgname => 'psycopg2',
+python::pip { "psycopg2":
+   pkgname => "psycopg2",
    ensure => latest,
-   virtualenv => '/home/coupmonitor/virtualenvs/coupmonitor_main',
+   virtualenv => "/home/${username}/virtualenvs/${projectname}",
 }
 
 

@@ -28,12 +28,14 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "puppet" do |puppet|
     puppet.manifests_path = "puppet/manifests"
+     puppet.facter = {
+        "username" => "youruser",
+         # Use openssl -1 to generate this password hash
+        "password" => "passhash", 
+        "projectname" => "cool_project"
+    }
     puppet.manifest_file = "site.pp"
-
-    puppet.module_path = ["puppet/modules"]
-
-    #puppet.module_path = ["puppet/modules", "/etc/puppet/modules", "/usr/share/puppet/modules"]
-  end
+ end
 
 end
 
