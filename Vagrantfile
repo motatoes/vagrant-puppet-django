@@ -6,7 +6,16 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 
-PROJECT_NAME = "yourproject"
+PUPPET_FACTERS = {
+    "USERNAME" => "youruser",
+     # Use openssl -1 to generate this password hash
+    "PASSWORD" => "yourpasswordhash",
+    "PROJECTNAME" => "projectname",
+}
+
+
+FileUtils.mkdir_p(PUPPET_FACTERS['PROJECTNAME'])
+
 
 Vagrant.configure(2) do |config|
 
@@ -22,23 +31,22 @@ Vagrant.configure(2) do |config|
    config.vm.network "forwarded_port", guest: 8080, host: 8000
 
   # == synced folders == #
-   config.vm.synced_folder PROJECT_NAME, "/home/coupmonitor/coupmonitor_main", owner:"vagrant"
+  ## Note: due to an issue of vagrant trying to mount this nonexistant folder before provisioning, as a workaround I comment this line before I do the first vagrnant up, and then I uncomment it thereafter so that the project folder is mounted ...
 
-  # == Provisioning == # 
-  config.vm.provision "shell" do |shell| 
+### TODO: Find a better way to sort this issue
+  # config.vm.synced_folder PUPPET_FACTERS["PROJECTNAME"], "/home/#{PUPPET_FACTERS['PROJECTNAME']}", owner: PUPPET_FACTERS['USERNAME']
+
+# == Provisioning == # config.vm.provision "shell" do |shell| 
+  config.vm.provision "shell" do |shell|
     shell.path = "install_puppet_modules.sh"
   end
 
   config.vm.provision "puppet" do |puppet|
     puppet.manifests_path = "puppet/manifests"
-     puppet.facter = {
-        "username" => "youruser",
-         # Use openssl -1 to generate this password hash
-        "password" => "passhash", 
-        "projectname" => PROJECT_NAME 
-    }
-    puppet.manifest_file = "site.pp"
+     puppet.facter = PUPPET_FACTERS 
+     puppet.manifest_file = "site.pp"
  end
+
 
 end
 
