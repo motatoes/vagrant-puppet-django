@@ -57,7 +57,7 @@ And that should be it! Enjoy
 # Contribution
 
 - Submit an issue if you face problems settings up the environment of if you have a feature request
-- 
+
 # TODO
 
 - [] During provisioning create a postgres database called ${username} and grant the user ${username} all permissions to this database
