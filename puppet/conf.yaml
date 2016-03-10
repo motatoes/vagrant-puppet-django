@@ -1,0 +1,5 @@
+USERNAME : youruser
+# Use openssl -1 to generate this password hash
+PASSWORD : yourpasswordhash
+PROJECTNAME : projectname
+

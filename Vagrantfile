@@ -6,15 +6,10 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 
-PUPPET_FACTERS = {
-    "USERNAME" => "youruser",
-     # Use openssl -1 to generate this password hash
-    "PASSWORD" => "yourpasswordhash",
-    "PROJECTNAME" => "projectname",
-}
 
+require 'yaml'
 
-FileUtils.mkdir_p(PUPPET_FACTERS['PROJECTNAME'])
+PUPPET_FACTERS = YAML.load_file('puppet/conf.yaml')
 
 
 Vagrant.configure(2) do |config|
