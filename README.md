@@ -60,5 +60,5 @@ And that should be it! Enjoy
 - 
 # TODO
 
-[] During provisioning create a postgres database called ${username} and grant the user ${username} all permissions to this database
-[] Make the puppet manifest modular by create a module for each component and 'including'
+- [] During provisioning create a postgres database called ${username} and grant the user ${username} all permissions to this database
+- [] Make the puppet manifest modular by create a module for each component and 'including'
